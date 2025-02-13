@@ -11,5 +11,5 @@ public class Demo {
     private String devName;
     private String devGender;
     private Integer devAge;
-    private String[] devLang;
+    private String devLang;
 }
