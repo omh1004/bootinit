@@ -1,0 +1,20 @@
+#서버설정
+server:
+  port: 9090
+  servlet:
+    encoding:
+      charset: UTF-8
+
+# jsp 설정
+spring:
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+##  config:
+##    import:
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: spring
+    password: spring
