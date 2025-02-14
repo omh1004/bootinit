@@ -28,7 +28,7 @@ public class JpaMemberEntity {
     private String userId;
     @Column(nullable = false)
     private String password;
-    private String userName;
+    private String name;
     private LocalDate birthday;
     private LocalDate reservationDay;
     private Integer age;
@@ -40,7 +40,7 @@ public class JpaMemberEntity {
                 .memberNo(memberNo)
                 .userId(userId)
                 .password(password)
-                .userName(userName)
+                .name(name)
                 .birthday(birthday)
                 .reservationDay(reservationDay)
                 .age(age)
@@ -51,7 +51,7 @@ public class JpaMemberEntity {
                 .memberNo(m.getMemberNo())
                 .userId(m.getUserId())
                 .password(m.getPassword())
-                .userName(m.getUserName())
+                .name(m.getName())
                 .birthday(m.getBirthday())
                 .reservationDay(m.getReservationDay())
                 .age(m.getAge())

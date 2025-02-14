@@ -28,7 +28,7 @@ public class JpaMember implements UserDetails {
             ,message = "비밀번호 규칙에 위배됩니다. 숫자 영문자 5글자로 설정 ")
     private String password;
     @Size(min=2, message="이름은 한글자 이상이여야함니다.")
-    private String userName;
+    private String name;
     @PastOrPresent(message = "생일은 과거여야해요")
     private LocalDate birthday;
     @Future(message = "미래여야함")

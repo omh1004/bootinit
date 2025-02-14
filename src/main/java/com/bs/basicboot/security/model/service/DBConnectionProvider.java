@@ -36,11 +36,13 @@ public class DBConnectionProvider implements AuthenticationProvider {
             throw new BadCredentialsException("아이디, 패스워드가 일치하지 않습니다.");
         }
 
-        return new UsernamePasswordAuthenticationToken(member,member.getPassword(),);
+        return new UsernamePasswordAuthenticationToken(member,member.getPassword()
+                ,member.getAuthorities());
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return false;
+        return UsernamePasswordAuthenticationToken.class
+                .isAssignableFrom(authentication);
     }
 }

@@ -29,7 +29,7 @@ public interface JpaMemberRepository
 
     //반환값을 Stream설정할 수 있음
     //like 문은 패턴과 같이 들어와야한다.
-    Stream<JpaMemberEntity> findByUserNameLike(String userName);
+    Stream<JpaMemberEntity> findByNameLike(String userName);
 
     List<JpaMemberEntity> deleteByReservationDayBefore(LocalDate res);
 
