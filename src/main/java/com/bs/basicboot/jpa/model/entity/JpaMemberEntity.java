@@ -46,7 +46,7 @@ public class JpaMemberEntity {
                 .age(age)
                 .build();
     }
-    public static JpaMemberEntity fromJpamember(JpaMember m){
+    public static JpaMemberEntity fromJpaMember(JpaMember m){
         return JpaMemberEntity.builder()
                 .memberNo(m.getMemberNo())
                 .userId(m.getUserId())
