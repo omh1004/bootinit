@@ -1,9 +1,12 @@
 package com.bs.basicboot.jpa.model.service;
 
+import com.bs.basicboot.common.token.JwtTokenUtils;
 import com.bs.basicboot.jpa.model.dao.JpaMemberRepository;
 import com.bs.basicboot.jpa.model.dto.JpaMember;
 import com.bs.basicboot.jpa.model.entity.JpaMemberEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -15,6 +18,8 @@ import java.util.Map;
 public class JpaMemberServiceImpl implements JpaMemberService{
 
     private final JpaMemberRepository repository;
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final JwtTokenUtils tokenUtils;
 
     @Override
     public boolean addMember(JpaMember m) {
@@ -83,5 +88,22 @@ public class JpaMemberServiceImpl implements JpaMemberService{
                 .stream()
                 .map(entity-> entity.toJpaMember())
                 .toList();
+
+    }
+
+    @Override
+    public String loginService(String userId, String password) {
+        JpaMember loginMember = repository.findByUserId(userId)
+                .orElseThrow(
+                        ()->{throw new BadCredentialsException("인증실패 ");
+                        }
+                ).toJpaMember();
+
+        if(encoder.matches(password,loginMember.getPassword())){
+            return tokenUtils.generateToken(loginMember);
+        }else{
+             throw new BadCredentialsException("인증실패");
+        }
+
     }
 }

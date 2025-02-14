@@ -30,7 +30,7 @@ public class JwtTokenUtils {
 
     //토큰을 만드는 메소드제공
     public String generateToken(JpaMember m){
-        return createToken(m,Duration.ofNanos().ofDays(5));
+        return createToken(m,Duration.ofDays(5));
     }
 
     //토큰을 생성하여 반환하는 메소드
@@ -46,13 +46,17 @@ public class JwtTokenUtils {
                 .claims(Map.of("id",m.getUserId(),"memberNo",m.getMemberNo()))
                 .compact();
     }
+
+
+
+
     //토큰으로 인증을 처리하는 메소드
     public Authentication getAuthentication(String token){
         String userId = getUserId(token);
         JpaMember member = repository.findByUserId(userId).orElseThrow( ()->{
             throw new BadCredentialsException("인증실패");
                 }).toJpaMember();
-        return new UsernamePasswordAuthenticationToken(member,member.getPassword()),
+        return new UsernamePasswordAuthenticationToken(member,member.getPassword(),
                     member.getAuthorities());
     }
     //토큰의 유효성을 확인하는 메소드

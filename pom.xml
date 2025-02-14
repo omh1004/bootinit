@@ -79,10 +79,10 @@
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-jasper -->
         <!-- https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-jasper -->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.tomcat.embed</groupId>-->
+<!--            <artifactId>tomcat-embed-jasper</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>

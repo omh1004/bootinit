@@ -1,6 +1,7 @@
 package com.bs.basicboot.common.config;
 
 import com.bs.basicboot.common.MyAccessDenied;
+import com.bs.basicboot.common.token.JwtTokenFilter;
 import com.bs.basicboot.security.model.service.DBConnectionProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -8,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -16,6 +19,7 @@ public class SecurityConfig {
 
 
     private final DBConnectionProvider dbProvider;
+    private final JwtTokenFilter tokenFilter;
 
     //시큐리티 설정은 securityfilter를 bean으로 등록
 
@@ -34,7 +38,8 @@ public class SecurityConfig {
                  // http요청에 있는것을 권한 확인 하겠다.
                  .authorizeHttpRequests(registry-> registry
                             .requestMatchers("/").permitAll()
-                             .requestMatchers("/WEB-INF/views/**").permitAll()
+                             .requestMatchers(new AntPathRequestMatcher("/static/**")).permitAll()
+                         .requestMatchers("/auth/login.do").permitAll()
                              // 어떤 요청이던 요청받겠다.
                              .anyRequest().authenticated())
 //                 .formLogin(formlogin->formlogin
@@ -44,11 +49,13 @@ public class SecurityConfig {
 //                 )
 //                 .logout(logout->logout)
                  //인증처리하는 서비스를 등록 ->DB 인증 절차 처리
-                 .authenticationProvider(dbProvider)
+                // .authenticationProvider(dbProvider)
+
                  //권한이 부족한 사용자가 서비스 접근했을때, 처리할 로직 처리
                  .exceptionHandling(handle->{handle
                          .accessDeniedHandler(new MyAccessDenied());
                  })
+                 .addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class)
                  .build();
     }
 }
