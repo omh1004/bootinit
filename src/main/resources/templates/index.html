@@ -1,9 +1,37 @@
-<html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+<h2>일반문구출력하기</h2>
+<p th:text="안녕하세요"></p>
+<h2>model에 저장된 데이터 출력하기</h2>
+<h4 th:text="${name}"></h4>
+<ul>
+    <li th:text="${member.userId}"></li>
+    <li th:text="${member.password}"></li>
+    <li th:text="${member.name}"></li>
+    <li th:text="${member.age}"></li>
+</ul>
+<ul th:object="${member}">
+    <li th:text="*{userId}"></li>
+    <li th:text="*{password}"></li>
+    <li th:text="*{name}"></li>
+    <li th:text="*{age}"></li>
+</ul>
+<h3 th:if="${member.age<40}">40대</h3>
+<h3>지니어스</h3>
+<ul th:each="t:${team}">
+    <li th:text="${t}"></li>
+</ul>
+<h3>요청 주소설정하기</h3>
+<a th:href="@{/test}">test로 요청</a>
+<a th:href="@{/member/{id}(id=${member.userId})}">id로 조회</a>
+<a th:href="@{/member(id=${member.userId})}">querystring으로 데이터 전송</a>
+
+
 <h1>토큰인증 처리하기</h1>
 <div>
     <input type="text" id="userId"><br>
@@ -29,43 +57,37 @@
 </div>
 <input type="file" name="upFile"><button onclick="upload()">업로드</button>
 <script>
-
-    const upload = ()=>{
-        const formData = new FormData();
-        formData.append("upFile"
-        ,document.querySelector("input[type='file']").files[0]);
+    const upload=()=>{
+        const formData=new FormData();
+        formData.append("upFile",
+            document.querySelector("input[type='file']").files[0]);
         fetch("/jpa/member/upload",{
-         headers:{
-            "Authorization":sessionStorage.getItem("token")
-        },method:"POST",
-        body: formData
+            headers:{"Authorization":sessionStorage.getItem("token")},
+            method:"POST",
+            body:formData
         }).then(response=>console.log(response));
-
     }
-
-
     const insertMember=()=>{
         const inputs=document.querySelectorAll("#enroll-member>input");
         let memberdata={};
         inputs.forEach(input=>{
             memberdata[input.name]=input.value;
         });
-        console.log(memberdata);
-
-        fetch("jpa/member",{
+        fetch("/jpa/member",{
             headers:{
                 "Authorization":sessionStorage.getItem("token"),
-                "Content-Type":"application/json"
-            },method:"POST"
-            ,body:JSON.stringify(memberdata)
-        }).then((response)=>{
-                if(response.ok) alert("등록 성공");
-                else alert("등록실패");
-
-             location.href=location.href;
+                "Content-Type":"application/json",
+            },
+            method:"POST",
+            body:JSON.stringify(memberdata)
+        }).then((response)=> {
+            if (response.ok) alert("등록성공");
+            else alert("등록실패");
+            //response=>response.json()
         })
-
-
+        // .then(data=>{
+        //     console.log(data);
+        // });
     }
     const searchMemberByNo=()=>{
         const no=document.querySelector("#userNo").value;

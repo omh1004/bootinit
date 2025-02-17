@@ -29,10 +29,12 @@ public class SecurityConfig {
                 .csrf(web->web.disable())
                 //interceptor-url설정과 동일
                 .authorizeHttpRequests(auth->auth
+                        .requestMatchers(req->CorsUtils.isPreFlightRequest(req)).permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("index.html").permitAll()
+                        .requestMatchers("/member/**").permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/static/**")).permitAll()
-                        .requestMatchers(req ->CorsUtils.isPreFlightRequest(req)).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/templates/**")).permitAll()
                         .requestMatchers("/auth/login.do").permitAll()
                         .anyRequest().authenticated()
                 )
