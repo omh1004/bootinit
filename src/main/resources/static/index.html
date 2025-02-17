@@ -1,34 +1,128 @@
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-    <h1>토큰인증 처리하기</h1>
-    <div>
-        <input type="text" id="userId"><br>
-        <input type="password" id="password">
-        <button onclick="login()">로그인</button>
-    </div>
+<h1>토큰인증 처리하기</h1>
+<div>
+    <input type="text" id="userId"><br>
+    <input type="password" id="password"><br>
+    <button onclick="login()">로그인</button>
+</div>
+<div>
+    <h3 onclick="searchMember();">회원조회</h3>
+    <div id="datacontainer"></div>
+</div>
+<div>
+    <input type="text" id="userNo" placeholder="회원번호">
+    <button onclick="searchMemberByNo();">조회</button>
+</div>
+<div id="enroll-member">
+    <input type="text" name="userId">
+    <input type="password" name="password">
+    <input type="text" name="name">
+    <input type="text" name="age">
+    <input type="date" name="birthDay">
+    <input type="date" name="reservationDay">
+    <button onclick="insertMember()">저장하기</button>
+</div>
+<input type="file" name="upFile"><button onclick="upload()">업로드</button>
 <script>
-    const login=()=>{
-        const userId = document.querySelector("#userId").value;
-        const password=document.querySelector("#password").value;
-        fetch("http://localhost:9090/auth/login.do",{
+
+    const upload = ()=>{
+        const formData = new FormData();
+        formData.append("upFile"
+        ,document.querySelector("input[type='file']").files[0]);
+        fetch("/jpa/member/upload",{
+         headers:{
+            "Authorization":sessionStorage.getItem("token")
+        },method:"POST",
+        body: formData
+        }).then(response=>console.log(response));
+
+    }
+
+
+    const insertMember=()=>{
+        const inputs=document.querySelectorAll("#enroll-member>input");
+        let memberdata={};
+        inputs.forEach(input=>{
+            memberdata[input.name]=input.value;
+        });
+        console.log(memberdata);
+
+        fetch("jpa/member",{
             headers:{
-                "Content-Type" : "application-json",
-            },method:"POST",
-            body:JSON.stringify({userId:userId,password:password})
+                "Authorization":sessionStorage.getItem("token"),
+                "Content-Type":"application/json"
+            },method:"POST"
+            ,body:JSON.stringify(memberdata)
+        }).then((response)=>{
+                if(response.ok) alert("등록 성공");
+                else alert("등록실패");
+
+             location.href=location.href;
+        })
+
+
+    }
+    const searchMemberByNo=()=>{
+        const no=document.querySelector("#userNo").value;
+        fetch(`/jpa/member/${no}`,{
+            headers:{
+                "Authorization":sessionStorage.getItem("token")
+            },method:"GET"
         }).then(response=>{
-            if (response.ok()) return response.json();
-            else throw new Error("로그인 실패 ");
-        }).then(data =>{
+            // switch(response.status){
+            //     case 200 :
+            //     case 403 :
+            // }
+            if(response.ok) return response.json();
+            else throw new Error(`${no} 회원을 찾을 수 없습니다.`)
+        }).then(data=>{
             console.log(data);
-            sessionStorage.setItem("token",data.token);
+        }).catch(e=>alert(e));
+
+
+    }
+    const searchMember=()=>{
+        fetch("/jpa/member",{
+            headers:{
+                "Authorization":sessionStorage.getItem("token")
+            },
+            method:"GET"
+        })
+            .then(response=>{
+                if(response.ok) return response.json();
+                else throw new Error("서비스이용실패");
+            }).then(data=>{
+            console.log(data);
         }).catch(e=>{
             alert(e);
         })
     }
-</script>
+    const login=()=>{
+        const userId=document.querySelector("#userId").value;
+        const password=document.querySelector("#password").value;
+        fetch("/auth/login.do",{
+            headers:{
+                "Content-Type":"application/json",
+            },
+            method:"POST",
+            body:JSON.stringify({userId:userId,password:password})
+        }).then(response=>{
+            if(response.ok) return response.json();
+            else throw new Error("로그인 실패");
+        }).then(data=>{
+            console.log(data);
+            sessionStorage.setItem("token",data.token);
 
+        }).catch(e=>{
+            alert(e);
+        })
+
+    }
+</script>
 </body>
 </html>

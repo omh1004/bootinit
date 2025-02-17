@@ -2,12 +2,17 @@ package com.bs.basicboot.jpa.controller;
 
 import com.bs.basicboot.jpa.model.dto.JpaMember;
 import com.bs.basicboot.jpa.model.service.JpaMemberService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -42,9 +47,16 @@ public class JpaMemberController {
 
     @GetMapping("/{no}")
     public ResponseEntity memberByNo(@PathVariable Long no){
+
+
+
+
         try {
             JpaMember findMember = service.getMemberByNo(no);
-            return ResponseEntity.ok().body(findMember);
+
+
+
+            return ResponseEntity.ok(findMember);
         }catch(Exception e){
             return ResponseEntity.notFound().build();
         }
@@ -52,6 +64,7 @@ public class JpaMemberController {
 
     @PutMapping
     public ResponseEntity updateMember(@RequestBody JpaMember m){
+
         boolean result=service.updateMember(m);
         if(result){
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -86,5 +99,20 @@ public class JpaMemberController {
         return ResponseEntity.ok().body(service.getMemberByAge(age));
     }
 
+    @PostMapping("/upload")
+    public ResponseEntity fileUpload(
+            //@RequestParam("upfile")
+            MultipartFile upFile, HttpSession session){
+
+
+        session.getServletContext().getRealPath("/");
+        System.out.println(upFile.getName());
+        System.out.println(upFile.getSize());
+        System.out.println(upFile.getOriginalFilename());
+        System.out.println(upFile.getName());
+
+
+        return ResponseEntity.ok().build();
+    }
 
 }

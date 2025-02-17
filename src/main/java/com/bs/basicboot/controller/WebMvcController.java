@@ -42,7 +42,7 @@ public class WebMvcController {
         System.out.println("환경경로 : "+envpath);
         System.out.println("myip: "+myproperties.getIp());
         System.out.println("myip: "+myproperties.getPort());
-        return "index";
+        return "index.html";
     }
 
     @RequestMapping("/demo/demolist")
