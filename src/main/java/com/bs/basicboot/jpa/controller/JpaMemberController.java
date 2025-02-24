@@ -3,6 +3,7 @@ package com.bs.basicboot.jpa.controller;
 import com.bs.basicboot.jpa.model.dto.JpaMember;
 import com.bs.basicboot.jpa.model.service.JpaMemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
@@ -44,13 +45,9 @@ public class JpaMemberController {
         }
     }
 
-
+    @Operation(summary = "회원 번호로 회원조회")
     @GetMapping("/{no}")
     public ResponseEntity memberByNo(@PathVariable Long no){
-
-
-
-
         try {
             JpaMember findMember = service.getMemberByNo(no);
 

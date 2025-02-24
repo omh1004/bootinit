@@ -31,12 +31,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth->auth
                         .requestMatchers(req->CorsUtils.isPreFlightRequest(req)).permitAll()
                         .requestMatchers("/").permitAll()
+                                .requestMatchers("/**").permitAll()
                         .requestMatchers("index.html").permitAll()
                         .requestMatchers("/member/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/api-docs").permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/static/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/templates/**")).permitAll()
                         .requestMatchers("/auth/login.do").permitAll()
-                        .anyRequest().authenticated()
+                       // .anyRequest().authenticated()
                 )
 //                .formLogin(formlogin->formlogin
 //                        .loginProcessingUrl("/loginend.do")
